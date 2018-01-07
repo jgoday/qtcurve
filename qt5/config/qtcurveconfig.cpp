@@ -974,9 +974,10 @@ QtCurveConfig::QtCurveConfig(QWidget *parent)
     menuBgndOpacity->setValue(100);
     dropShadowSize->setRange(0, 100);
     dropShadowSize->setSingleStep(1);
-    dropShadowSize->setValue(qtcX11ShadowSize());
 #ifndef QTC_ENABLE_X11
     dropShadowSize->setEnabled(false);
+#else
+    dropShadowSize->setValue(qtcX11ShadowSize());
 #endif
 
 
@@ -2223,9 +2224,9 @@ void QtCurveConfig::previewControlPressed()
         if(stylePreview)
             stylePreview->deleteLater();
         stylePreview = new CStylePreview;
-        mdiWindow = workSpace->addSubWindow(stylePreview, Qt::Window);
-        mdiWindow->move(4, 4);
-        mdiWindow->showMaximized();
+//        mdiWindow = workSpace->addSubWindow(stylePreview, Qt::Window);
+  //      mdiWindow->move(4, 4);
+    //    mdiWindow->showMaximized();
         previewControlButton->setText(i18n("Detach"));
     }
     connect(qtcSlot(stylePreview, closePressed),
@@ -3053,7 +3054,9 @@ void QtCurveConfig::setOptions(Options &opts)
     opts.menuBgndImage.type=(EImageType)menuBgndImage->currentIndex();
     opts.menuBgndOpacity=menuBgndOpacity->value();
     opts.shadowSize=dropShadowSize->value();
+#ifdef QTC_ENABLE_X11
     qtcX11SetShadowSize(opts.shadowSize);
+#endif
     opts.dwtAppearance=(EAppearance)dwtAppearance->currentIndex();
     opts.tooltipAppearance=(EAppearance)tooltipAppearance->currentIndex();
     opts.crColor=(EShade)crColor->currentIndex();
@@ -3366,7 +3369,9 @@ void QtCurveConfig::setWidgetOptions(const Options &opts)
     dlgOpacity->setValue(opts.dlgOpacity);
     menuBgndImage->setCurrentIndex(opts.menuBgndImage.type);
     menuBgndOpacity->setValue(opts.menuBgndOpacity);
+#ifdef QTC_ENABLE_X11
     dropShadowSize->setValue(qtcX11ShadowSize());
+#endif
     dwtAppearance->setCurrentIndex(opts.dwtAppearance);
     tooltipAppearance->setCurrentIndex(opts.tooltipAppearance);
     dwtBtnAsPerTitleBar->setChecked(opts.dwtSettings&DWT_BUTTONS_AS_PER_TITLEBAR);
